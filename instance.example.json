@@ -1,0 +1,8 @@
+{
+  "host": "your-comfyui-host.example.com",
+  "port": 22,
+  "user": "root",
+  "password": "REPLACE_ME_or_use_COMFY_SSH_PASSWORD",
+  "local_port": 16006,
+  "remote_port": 6006
+}

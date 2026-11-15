@@ -1,0 +1,20 @@
+# credentials / local config
+instance.json
+*.local.json
+
+# node catalog cache
+.cache/
+
+# python
+__pycache__/
+*.pyc
+
+# local outputs
+out/
+test-out/
+*.workflow.json
+*.api.json
+
+# OS
+Thumbs.db
+.DS_Store

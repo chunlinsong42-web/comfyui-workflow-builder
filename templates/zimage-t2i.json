@@ -1,0 +1,25 @@
+{
+  "title": "Zimage 文生图 - 基础版",
+  "nodes": {
+    "unet": {"type": "UNETLoader", "widgets": {"unet_name": "Zimage/z_image_turbo_bf16.safetensors", "weight_dtype": "default"}},
+    "clip": {"type": "CLIPLoader", "widgets": {"clip_name": "qwen_3_4b.safetensors", "type": "qwen_image", "device": "default"}},
+    "vae": {"type": "VAELoader", "widgets": {"vae_name": "z_image_vae.safetensors"}},
+    "latent": {"type": "EmptyLatentImage", "widgets": {"width": 512, "height": 768, "batch_size": 1}},
+    "pos": {"type": "CLIPTextEncode", "widgets": {"text": "一张极简的产品摄影：白色陶瓷杯放在米色亚麻桌面上，晨光斜射，浅景深，柔和阴影，高级质感"}},
+    "neg": {"type": "CLIPTextEncode", "widgets": {"text": "低分辨率，模糊，扭曲，水印，文字"}},
+    "sampler": {"type": "KSampler", "widgets": {"seed": 42, "steps": 6, "cfg": 1, "sampler_name": "euler", "scheduler": "simple", "denoise": 1}},
+    "decode": {"type": "VAEDecode"},
+    "save": {"type": "SaveImage", "widgets": {"filename_prefix": "skilltest/zimage_t2i"}}
+  },
+  "links": [
+    "unet.MODEL -> sampler.model",
+    "clip.CLIP -> pos.clip",
+    "clip.CLIP -> neg.clip",
+    "latent.LATENT -> sampler.latent_image",
+    "pos.CONDITIONING -> sampler.positive",
+    "neg.CONDITIONING -> sampler.negative",
+    "sampler.LATENT -> decode.samples",
+    "vae.VAE -> decode.vae",
+    "decode.IMAGE -> save.images"
+  ]
+}

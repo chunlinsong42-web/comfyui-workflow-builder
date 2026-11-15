@@ -1,0 +1,25 @@
+{
+  "title": "Krea2 文生图 - 写实人像",
+  "nodes": {
+    "unet": {"type": "UNETLoader", "widgets": {"unet_name": "krea2/krea2_turbo_int8_convrot.safetensors", "weight_dtype": "default"}},
+    "clip": {"type": "CLIPLoader", "widgets": {"clip_name": "qwen3vl_4b_bf16.safetensors", "type": "krea2", "device": "default"}},
+    "vae": {"type": "VAELoader", "widgets": {"vae_name": "qwen_image_vae.safetensors"}},
+    "latent": {"type": "EmptyLatentImage", "widgets": {"width": 768, "height": 1024, "batch_size": 1}},
+    "pos": {"type": "CLIPTextEncode", "widgets": {"text": "cinematic portrait of a young woman in a linen shirt, soft window light, shallow depth of field, natural skin texture, muted warm palette, 85mm lens"}},
+    "neg": {"type": "CLIPTextEncode", "widgets": {"text": "lowres, blurry, deformed, watermark, text"}},
+    "sampler": {"type": "KSampler", "widgets": {"seed": 7, "steps": 8, "cfg": 1, "sampler_name": "euler", "scheduler": "simple", "denoise": 1}},
+    "decode": {"type": "VAEDecode"},
+    "save": {"type": "SaveImage", "widgets": {"filename_prefix": "skilltest/krea2_t2i"}}
+  },
+  "links": [
+    "unet.MODEL -> sampler.model",
+    "clip.CLIP -> pos.clip",
+    "clip.CLIP -> neg.clip",
+    "latent.LATENT -> sampler.latent_image",
+    "pos.CONDITIONING -> sampler.positive",
+    "neg.CONDITIONING -> sampler.negative",
+    "sampler.LATENT -> decode.samples",
+    "vae.VAE -> decode.vae",
+    "decode.IMAGE -> save.images"
+  ]
+}

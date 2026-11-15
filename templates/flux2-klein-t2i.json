@@ -1,0 +1,25 @@
+{
+  "title": "FLUX2-Klein 文生图",
+  "nodes": {
+    "unet": {"type": "UNETLoader", "widgets": {"unet_name": "flux/flux-2-klein-9b-fp8.safetensors", "weight_dtype": "default"}},
+    "clip": {"type": "CLIPLoader", "widgets": {"clip_name": "qwen_3_8b_fp8mixed.safetensors", "type": "flux2", "device": "default"}},
+    "vae": {"type": "VAELoader", "widgets": {"vae_name": "flux2-vae.safetensors"}},
+    "latent": {"type": "EmptyFlux2LatentImage", "widgets": {"width": 1024, "height": 1024, "batch_size": 1}},
+    "pos": {"type": "CLIPTextEncode", "widgets": {"text": "国风少女立于雪中庭院，浅蓝披风，发间银饰，晨光通透，8K 超写实插画，电影感构图"}},
+    "neg": {"type": "CLIPTextEncode", "widgets": {"text": "低分辨率，模糊，扭曲，水印，文字，畸形"}},
+    "sampler": {"type": "KSampler", "widgets": {"seed": 11, "steps": 10, "cfg": 1, "sampler_name": "res_2s", "scheduler": "bong_tangent", "denoise": 1}},
+    "decode": {"type": "VAEDecode"},
+    "save": {"type": "SaveImage", "widgets": {"filename_prefix": "skilltest/flux2klein"}}
+  },
+  "links": [
+    "unet.MODEL -> sampler.model",
+    "clip.CLIP -> pos.clip",
+    "clip.CLIP -> neg.clip",
+    "latent.LATENT -> sampler.latent_image",
+    "pos.CONDITIONING -> sampler.positive",
+    "neg.CONDITIONING -> sampler.negative",
+    "sampler.LATENT -> decode.samples",
+    "vae.VAE -> decode.vae",
+    "decode.IMAGE -> save.images"
+  ]
+}

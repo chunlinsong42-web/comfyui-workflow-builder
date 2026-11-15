@@ -1,0 +1,28 @@
+{
+  "title": "Zimage 图生图 - 重绘",
+  "nodes": {
+    "unet": {"type": "UNETLoader", "widgets": {"unet_name": "Zimage/z_image_turbo_bf16.safetensors", "weight_dtype": "default"}},
+    "clip": {"type": "CLIPLoader", "widgets": {"clip_name": "qwen_3_4b.safetensors", "type": "qwen_image", "device": "default"}},
+    "vae": {"type": "VAELoader", "widgets": {"vae_name": "z_image_vae.safetensors"}},
+    "img": {"type": "LoadImage", "widgets": {"image": "123.png"}},
+    "enc": {"type": "VAEEncode"},
+    "pos": {"type": "CLIPTextEncode", "widgets": {"text": "same subject, soft studio light, clean background, high detail"}},
+    "neg": {"type": "CLIPTextEncode", "widgets": {"text": "blurry, deformed, watermark"}},
+    "sampler": {"type": "KSampler", "widgets": {"seed": 1, "steps": 6, "cfg": 1, "sampler_name": "euler", "scheduler": "simple", "denoise": 0.55}},
+    "decode": {"type": "VAEDecode"},
+    "save": {"type": "SaveImage", "widgets": {"filename_prefix": "skilltest/zimage_i2i"}}
+  },
+  "links": [
+    "unet.MODEL -> sampler.model",
+    "clip.CLIP -> pos.clip",
+    "clip.CLIP -> neg.clip",
+    "img.IMAGE -> enc.pixels",
+    "vae.VAE -> enc.vae",
+    "enc.LATENT -> sampler.latent_image",
+    "pos.CONDITIONING -> sampler.positive",
+    "neg.CONDITIONING -> sampler.negative",
+    "sampler.LATENT -> decode.samples",
+    "vae.VAE -> decode.vae",
+    "decode.IMAGE -> save.images"
+  ]
+}

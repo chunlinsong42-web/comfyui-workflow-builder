@@ -1,0 +1,35 @@
+{
+  "title": "Wan2.2 原生节点 图生视频",
+  "nodes": {
+    "unet": {"type": "UNETLoader", "widgets": {"unet_name": "Wan/TurboWan2.2-I2V-A14B-high-720P.pth", "weight_dtype": "default"}},
+    "clip": {"type": "CLIPLoader", "widgets": {"clip_name": "umt5_xxl_fp16.safetensors", "type": "wan", "device": "default"}},
+    "vae": {"type": "VAELoader", "widgets": {"vae_name": "wan_2.1_vae.safetensors"}},
+    "cvl": {"type": "CLIPVisionLoader", "widgets": {"clip_name": "clip_vision_h.safetensors"}},
+    "img": {"type": "LoadImage", "widgets": {"image": "123.png"}},
+    "cve": {"type": "CLIPVisionEncode", "widgets": {"crop": "center"}},
+    "pos": {"type": "CLIPTextEncode", "widgets": {"text": "the scene comes alive with gentle motion, the woman turns her head slowly, soft wind, cinematic, high quality, smooth motion"}},
+    "neg": {"type": "CLIPTextEncode", "widgets": {"text": "worst quality, blurry, distorted, static, watermark, jittery"}},
+    "w2v": {"type": "WanImageToVideo", "widgets": {"width": 832, "height": 480, "length": 81, "batch_size": 1}},
+    "sampler": {"type": "KSampler", "widgets": {"seed": 3, "steps": 25, "cfg": 6, "sampler_name": "euler", "scheduler": "normal", "denoise": 1}},
+    "decode": {"type": "VAEDecode"},
+    "save": {"type": "SaveAnimatedWEBP", "widgets": {"filename_prefix": "skilltest/wan22_i2v", "fps": 16, "lossless": false, "quality": 85, "method": "default"}}
+  },
+  "links": [
+    "clip.CLIP -> pos.clip",
+    "clip.CLIP -> neg.clip",
+    "img.IMAGE -> cve.image",
+    "cvl.CLIP_VISION -> cve.clip_vision",
+    "pos.CONDITIONING -> w2v.positive",
+    "neg.CONDITIONING -> w2v.negative",
+    "vae.VAE -> w2v.vae",
+    "img.IMAGE -> w2v.start_image",
+    "cve.CLIP_VISION_OUTPUT -> w2v.clip_vision_output",
+    "w2v.latent -> sampler.latent_image",
+    "w2v.positive -> sampler.positive",
+    "w2v.negative -> sampler.negative",
+    "unet.MODEL -> sampler.model",
+    "sampler.LATENT -> decode.samples",
+    "vae.VAE -> decode.vae",
+    "decode.IMAGE -> save.images"
+  ]
+}

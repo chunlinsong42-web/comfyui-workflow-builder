@@ -1,0 +1,29 @@
+{
+  "title": "SDXL Illustrious 文生图 + 4x 放大",
+  "nodes": {
+    "ckpt": {"type": "CheckpointLoaderSimple", "widgets": {"ckpt_name": "SDXL/IL-perfectionRealisticILXL_33.safetensors"}},
+    "clipset": {"type": "CLIPSetLastLayer", "widgets": {"stop_at_clip_layer": -2}},
+    "pos": {"type": "CLIPTextEncode", "widgets": {"text": "masterpiece, best quality, 1girl, upper body, soft window light, detailed face, film photography"}},
+    "neg": {"type": "CLIPTextEncode", "widgets": {"text": "lowres, bad anatomy, bad hands, worst quality, watermark, text"}},
+    "latent": {"type": "EmptyLatentImage", "widgets": {"width": 832, "height": 1216, "batch_size": 1}},
+    "sampler": {"type": "KSampler", "widgets": {"seed": 5, "steps": 28, "cfg": 6, "sampler_name": "dpmpp_2m_sde", "scheduler": "karras", "denoise": 1}},
+    "decode": {"type": "VAEDecode"},
+    "usm": {"type": "UpscaleModelLoader", "widgets": {"model_name": "4x-UltraSharp.pth"}},
+    "ups": {"type": "ImageUpscaleWithModel"},
+    "save": {"type": "SaveImage", "widgets": {"filename_prefix": "skilltest/sdxl_il"}}
+  },
+  "links": [
+    "ckpt.MODEL -> sampler.model",
+    "ckpt.CLIP -> clipset.clip",
+    "clipset.CLIP -> pos.clip",
+    "clipset.CLIP -> neg.clip",
+    "ckpt.VAE -> decode.vae",
+    "latent.LATENT -> sampler.latent_image",
+    "pos.CONDITIONING -> sampler.positive",
+    "neg.CONDITIONING -> sampler.negative",
+    "sampler.LATENT -> decode.samples",
+    "decode.IMAGE -> ups.image",
+    "usm.UPSCALE_MODEL -> ups.upscale_model",
+    "ups.IMAGE -> save.images"
+  ]
+}
