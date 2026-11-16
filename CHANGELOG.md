@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 ## v1.1.0 — 2026-11-16
 
@@ -8,7 +8,7 @@
 - `references/official-templates.md`：学习 Comfy-Org/workflow_templates 的 766 个官方模板（12 个分组），
   记录子图格式、10 个代表模板的展开链路、官方 vs 参考实例参数对照。
 - `requirements.txt`（paramiko）。
-- `scripts/check_repo.py` + GitHub Actions CI（模板 JSON、SKILL frontmatter、文档链接、密钥扫描）。
+- `scripts/check_repo.py`：模板 JSON、SKILL frontmatter、文档链接、密钥扫描自检（CI 可接入，见 CONTRIBUTING）。
 - `CONTRIBUTING.md`、`SECURITY.md`。
 - README 重制：Banner、徽章、目录、Mermaid 架构图、FAQ、Roadmap。
 
@@ -31,3 +31,4 @@
 - 文档：格式规范、12 类管线模板、节点目录、排错、自动修复循环、显存与采样参数、上游技能取舍记录
 - 模板：Zimage t2i / Krea2 t2i / Zimage i2i / FLUX2-Klein t2i / SDXL-Illustrious t2i+4x / Wan2.2 原生 i2v
 - 验证：Zimage 512×768 6 步 48.6s；Krea2 768×1024 8 步 42.6s（RTX 5090）
+
