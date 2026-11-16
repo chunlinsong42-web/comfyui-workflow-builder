@@ -1,0 +1,3 @@
+# Only third-party dependency: SSH tunnel + SFTP helpers.
+# Everything else (HTTP, JSON, validation, recipe building) uses the Python standard library.
+paramiko>=3.4

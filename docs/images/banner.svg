@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-label="ComfyUI Workflow Builder">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="0.55" stop-color="#151c3a"/>
+      <stop offset="1" stop-color="#1f2a55"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4cc9f0"/>
+      <stop offset="0.5" stop-color="#7b61ff"/>
+      <stop offset="1" stop-color="#f72585"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.2" cy="0.1" r="0.8">
+      <stop offset="0" stop-color="#4cc9f0" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#4cc9f0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="320" fill="url(#bg)"/>
+  <rect width="1200" height="320" fill="url(#glow)"/>
+
+  <!-- node graph decoration -->
+  <g stroke="#3a4a7a" stroke-width="2" fill="none" opacity="0.8">
+    <path d="M70 250 L190 250 L190 170 L320 170"/>
+    <path d="M190 250 L190 300 L340 300"/>
+    <path d="M320 170 L430 170"/>
+    <path d="M430 170 L430 90 L560 90"/>
+    <path d="M430 170 L430 250 L560 250"/>
+  </g>
+  <g fill="#0f1630" stroke="#4cc9f0" stroke-width="2">
+    <rect x="40" y="232" width="64" height="36" rx="8"/>
+    <rect x="292" y="152" width="64" height="36" rx="8"/>
+    <rect x="532" y="72" width="64" height="36" rx="8"/>
+    <rect x="532" y="232" width="64" height="36" rx="8"/>
+    <rect x="532" y="282" width="64" height="36" rx="8"/>
+  </g>
+  <g fill="#7b61ff" opacity="0.9">
+    <circle cx="72" cy="250" r="4"/><circle cx="324" cy="170" r="4"/><circle cx="564" cy="90" r="4"/>
+  </g>
+
+  <text x="640" y="120" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="54" font-weight="700" fill="#ffffff">ComfyUI Workflow Builder</text>
+  <text x="642" y="166" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="24" fill="#a8b3d1">recipe → editable workflow JSON · offline validate · SSH tunnel</text>
+
+  <rect x="640" y="196" width="420" height="6" rx="3" fill="url(#accent)"/>
+
+  <text x="642" y="244" font-family="Consolas, Menlo, monospace" font-size="18" fill="#7ee0ff">$ python scripts/comfy.py build zimage-t2i.json -o wf.json</text>
+  <text x="642" y="272" font-family="Consolas, Menlo, monospace" font-size="18" fill="#9aa7c7">$ python scripts/comfy.py submit wf.json --wait --download out</text>
+
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" fill="#cfd8ee">
+    <rect x="640" y="292" width="112" height="24" rx="12" fill="#101a36" stroke="#4cc9f0" stroke-opacity="0.5"/>
+    <text x="654" y="309">ComfyUI 0.44+</text>
+    <rect x="764" y="292" width="96" height="24" rx="12" fill="#101a36" stroke="#7b61ff" stroke-opacity="0.5"/>
+    <text x="778" y="309">6 templates</text>
+    <rect x="872" y="292" width="120" height="24" rx="12" fill="#101a36" stroke="#f72585" stroke-opacity="0.5"/>
+    <text x="886" y="309">MIT licensed</text>
+  </g>
+</svg>

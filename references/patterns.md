@@ -175,3 +175,21 @@ KSampler(res_2s / bong_tangent, cfg=1, steps=10) → VAEDecode → SaveImage
 - 参数取自 C12 实测；Klein 走 cfg=1 的蒸馏路线。
 - 风格 LoRA 放 `flux/` 下（如 `Flux/Klein-yizhixing-lora.safetensors`，strength 0.6）。
 - 也可用 `flux/flux-2-klein-4b*` 小模型省显存。
+- **官方模板走另一条链**：`KSamplerSelect + Flux2Scheduler + CFGGuider + SamplerCustomAdvanced`，
+  见 `references/official-templates.md` §3。
+
+## 13. 官方模板（Comfy-Org/workflow_templates）对照
+
+官方仓库 766 个模板（2026-11 索引），全部是 UI 0.4 格式，且大多数把流程包进
+`definitions.subgraphs`。展开后的关键差异：
+
+| 模型 | 官方写法 | 与本技能模板的差异 |
+|---|---|---|
+| Z-Image Turbo | `EmptySD3LatentImage + ModelSamplingAuraFlow + KSampler` | 多一个 shift 调节节点 |
+| FLUX.2 Klein | `Flux2Scheduler + CFGGuider + SamplerCustomAdvanced` | 不用普通 KSampler |
+| Wan 2.2 14B I2V | **双 UNETLoader（高/低噪）+ 两段 KSamplerAdvanced + ModelSamplingSD3** | 本技能模板是单模型简化版 |
+| LTX 2.5 I2V | 两段 ManualSigmas + LTXVDualCFGGuider + 音频 VAE | 更复杂的音画同出链 |
+| Qwen-Image 2.1 | `TextEncodeQwenImage21 + QwenImage21Cache + 25 步 cfg1 euler/simple` | 步数比实例版多 |
+| MiniMax-H3 R2V | 20 步 simple + 可选 4 步 turbo LoRA | 与实例 U01 基本一致 |
+
+用 `python scripts/comfy.py inspect <官方模板.json>` 可直接看展开链；更多见 `references/official-templates.md`。

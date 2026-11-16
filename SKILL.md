@@ -80,6 +80,7 @@ python scripts\comfy.py nodes KSampler       # 节点签名与可选值；也支
 python scripts\comfy.py build recipe.json -o wf.json
 python scripts\comfy.py validate wf.json
 python scripts\comfy.py convert wf.json -o prompt.json
+python scripts\comfy.py inspect wf.json      # 展开子图，查看真实节点链（读别人的模板用）
 python scripts\comfy.py submit wf.json --wait --download .\out [--seed 123]
 python scripts\comfy.py queue / interrupt
 
@@ -153,6 +154,7 @@ python scripts\remote.py put .\wf.json "<远端分类>/name.json"
 | `references/troubleshooting.md` | 错误对照表 |
 | `references/error-autofix.md` | 5 轮自动修复循环 |
 | `references/vram-and-samplers.md` | 显存预算与采样参数 |
+| `references/official-templates.md` | 官方 766 个模板的学习笔记（子图格式、展开链路、参数对照） |
 | `references/github-digest.md` | 与上游技能的设计取舍 |
 | `references/upstream/` | 上游文档存档（MIT，版权归原作者） |
 | `templates/*.json` | 6 个 recipe 起点 |
@@ -165,6 +167,7 @@ python scripts\remote.py put .\wf.json "<远端分类>/name.json"
 - Krea2 Turbo 768×1024 / 8 步：success，42.6s。
 - 离线结构校验通过：Zimage 图生图、FLUX2-Klein、SDXL-Illustrious+4x、Wan2.2 原生 I2V。
 - 参考实例：ComfyUI 0.44.0 / 前端 1.58.5 / RTX 5090 / 6,619 节点 / 150 工作流。
+- 官方模板：766 个（12 个分组），子图定义在 `definitions.subgraphs`，`comfy.py inspect` 可展开。
 
 ## 致谢
 

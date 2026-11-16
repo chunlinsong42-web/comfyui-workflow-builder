@@ -89,8 +89,19 @@
 
 ## 7. 子图（subgraph）
 
-少数既有工作流（9 个）用 `extra.subgraphs.subgraphs[]` 定义子图，节点 `type` 是子图 UUID。子图内部结构同一套 nodes/links，另有 `inputNode/outputNode/inputs/outputs/widgets`。
-**不要手写子图**：需要复用逻辑时，复制一份既有子图工作流，或把子图展开成普通节点。
+两种存放位置都要支持：
+
+- **新格式（前端 1.5x / 官方模板）**：顶层 `definitions.subgraphs[]`；
+- **旧格式**：`extra.subgraphs.subgraphs[]`（少量老文件还在用）。
+
+子图对象含 `id / name / nodes / links / inputs / outputs / inputNode / outputNode / widgets`，
+顶层/父级节点里出现 `type` 等于子图 `id` 的实例节点，`inputs/outputs` 就是子图边界槽。
+
+官方 Comfy-Org 模板几乎全部是"子图包裹"：顶层只有 `SaveImage` + 一个子图实例，真实链路在
+`definitions.subgraphs` 里（见 `references/official-templates.md`）。所以：
+
+- 读别人的模板时，用 `python scripts/comfy.py inspect <wf.json>` 展开查看真实节点链；
+- **不要手写子图**：需要复用逻辑时，复制既有子图工作流改参数，或把子图展开成普通节点重搭。
 
 ## 8. API 提交格式（/prompt）
 

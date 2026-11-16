@@ -240,6 +240,55 @@ def resolve_src(node, token):
                      ", ".join("%s:%s" % (o["name"], o["type"]) for o in outs)))
 
 
+
+# ---------------------------------------------------------------- inspect
+def subgraph_map(wf):
+    subs = {}
+    for s in ((wf.get("definitions") or {}).get("subgraphs") or []):
+        if isinstance(s, dict) and s.get("id"):
+            subs[s["id"]] = s
+    legacy = ((wf.get("extra") or {}).get("subgraphs") or {}).get("subgraphs") or []
+    for s in legacy:
+        if isinstance(s, dict) and s.get("id"):
+            subs.setdefault(s["id"], s)
+    return subs
+
+
+def expand_nodes(wf):
+    subs = subgraph_map(wf)
+    out = []
+
+    def walk(nodes, depth):
+        for n in nodes:
+            if not isinstance(n, dict):
+                continue
+            t = n.get("type")
+            if t in subs:
+                walk(subs[t].get("nodes") or [], depth + 1)
+            else:
+                out.append((depth, t, n))
+
+    walk(wf.get("nodes") or [], 0)
+    return out, subs
+
+
+def cmd_inspect(path):
+    wf = jload(path)
+    nodes, subs = expand_nodes(wf)
+    print("file:", path)
+    print("format: UI %s | top-level nodes: %d | subgraphs: %d | groups: %d" % (
+        wf.get("version"), len(wf.get("nodes") or []), len(subs), len(wf.get("groups") or [])))
+    for depth, t, n in nodes:
+        if t in ("Reroute", "Note", "MarkdownNote", "PrimitiveNode"):
+            continue
+        w = n.get("widgets_values_named") or {}
+        keep = {}
+        if isinstance(w, dict):
+            keep = {k: str(v)[:40] for k, v in w.items()
+                    if k not in ("control_after_generate", "upload", "videopreview")}
+        print("  " + "  " * depth + "- " + str(t) + (("  " + json.dumps(keep, ensure_ascii=False)) if keep else ""))
+
+
 def build(recipe, catalog):
     nodes = recipe.get("nodes") or {}
     if not nodes:
@@ -618,6 +667,9 @@ def main():
     b.add_argument("recipe")
     b.add_argument("-o", "--out")
 
+    i = sub.add_parser("inspect")
+    i.add_argument("workflow")
+
     v = sub.add_parser("validate")
     v.add_argument("workflow")
 
@@ -679,6 +731,10 @@ def main():
             outs = ", ".join(output_names(spec))
             print("- %s  [%s]\n    in: %s\n    out: %s" % (k, spec.get("category", ""), ins, outs))
         return
+
+    if args.cmd == "inspect":
+        cmd_inspect(args.workflow)
+        return 0
 
     cat = load_catalog()
 
